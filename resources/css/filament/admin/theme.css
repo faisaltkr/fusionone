@@ -1,0 +1,16 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@config 'tailwind.config.js';
+
+
+.fi-section-content
+{
+    background: rgb(2, 47, 4);
+    border-radius: 50px;
+}
+
+@layer components {
+    .test-style {
+        @apply text-yellow-300;
+    }
+}
