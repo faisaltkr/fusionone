@@ -17,7 +17,7 @@
     </form>
 
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4 font-sans">
-        <x-filament::card class="bg-green-50 border border-green-200">
+        <x-filament::card class="bg-gray-500 border border-green-200">
             <div class="flex items-center gap-4">
                 <x-heroicon-o-currency-rupee class="w-8 h-8 text-green-600" />
                 <div>
