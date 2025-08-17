@@ -57,7 +57,7 @@ class CompanyRegistrationController extends Controller
 
         // Create the main PC record
         NumberOfClientPC::create([
-            'company_id'  => $uuid,
+            'company_id'  => $user->id,
             'hardware_id' => $request->hardware_id,
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,

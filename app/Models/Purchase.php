@@ -13,16 +13,17 @@ class Purchase extends Model
         'company_id',
         'branch_id',
         'entry_no',
-        'purchase_return_no',
-        'customer_name',
+        'purchase_purchase_return_no',
+        'supplier_id',
+        'supplier_name',
         'transaction_type', // sale or sale return
-        'customer_id',
         'mode_of_transaction', // cash, credit, bank transfer, etc.
         'gross_amount',
         'discount',
         'net_amount',
         'vat_amount',
         'grand_amount',
+        'tr_date'
     ];
 
     protected $casts = [

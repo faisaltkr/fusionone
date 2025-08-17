@@ -2,12 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Purchase;
 use App\Models\Sale;
 use App\Models\User;
 use Carbon\Carbon;
 use Exception; // Import the Exception class
 
-class SalesService
+class PurchaseService
 {
     // No properties for request-specific data needed here, as it's passed via methods.
     // protected Sale $sale; // This property is not needed if you're creating/finding directly in methods
@@ -51,7 +52,7 @@ class SalesService
      * @return array
      * @throws Exception If client is not found.
      */
-    private function prepareSaleData(array $data): array
+    private function preparePurchaseData(array $data): array
     {
         // Resolve the client for the current operation
         $client = $this->resolveClient($data['client_id'] ?? null);
@@ -61,10 +62,10 @@ class SalesService
             'company_id' => $client->id,
             'branch_id' => $client->branch_id ?? null, // Assuming branch_id exists on User model
             'entry_no' => $data['entry_no'],
-            'sales_sale_return_no' => $data['sales_sale_return_no'],
-            'customer_name' => $data['customer_name'],
+            'purchase_purchase_return_no' => $data['purchase_purchase_return_no'],
+            'supplier_id' => $data['supplier_id'] ?? null,
+            'supplier_name' => $data['supplier_name'],
             'transaction_type' => $data['transaction_type'],
-            'customer_id' => $data['customer_id'] ?? null, // Assuming customer_id is optional
             'mode_of_transaction' => $data['mode_of_transaction'],
             'gross_amount' => $data['gross_amount'],
             'discount' => $data['discount'] ?? 0.00,
@@ -83,13 +84,13 @@ class SalesService
      * @return Sale The newly created Sale model instance.
      * @throws Exception If client not found or data preparation fails.
      */
-    public function saveSaleData(array $data): Sale
+    public function savePurchaseData(array $data): Sale
     {
         // Prepare the data including client resolution
-        $preparedData = $this->prepareSaleData($data);
+        $preparedData = $this->preparePurchaseData($data);
 
         // Create and return the new Sale instance
-        $sale = Sale::create($preparedData);
+        $sale = Purchase::create($preparedData);
 
         return $sale;
     }
@@ -102,13 +103,13 @@ class SalesService
      * @return Sale The updated Sale model instance.
      * @throws Exception If sale not found, client not found or data preparation fails.
      */
-    public function updateSaleData(int $id, array $data): Sale
+    public function updatePurchaseData(int $id, array $data): Sale
     {
         // Find the sale by ID, throws ModelNotFoundException if not found
-        $sale = Sale::findOrFail($id);
+        $sale = Purchase::findOrFail($id);
 
         // Prepare the data including client resolution
-        $preparedData = $this->prepareSaleData($data);
+        $preparedData = $this->preparePurchaseData($data);
 
         // Update the sale
         $sale->update($preparedData);

@@ -37,7 +37,7 @@ class PurchaseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('entry_no')->label('Entry No'),
-                TextColumn::make('purchase_purchase_return_no')->label('Sale/Return No'),
+                TextColumn::make('purchase_purchase_return_no')->label('Purchase/Return No'),
                 TextColumn::make('supplier_id')->label('Supplier ID'),
                 TextColumn::make('supplier_name')->label('Supplier Name'),
                 TextColumn::make('transaction_type')
