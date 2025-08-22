@@ -19,6 +19,7 @@ class CheckClientId
         $uri = $request->uri()->path();
         if($uri == 'api/sales' || $uri == 'api/sales/{id}') {
            
+            
             $clientId = $request->header('clientId');
              
             $client = User::where('company_reg_id', $clientId)->where('status',1)->first();
@@ -28,7 +29,7 @@ class CheckClientId
             //         'message' => 'Unauthorized client ID.'
             //     ], Response::HTTP_UNAUTHORIZED);
             // }
-            return $next($request);
+            //return $next($request);
         }
         return $next($request);
        

@@ -43,14 +43,14 @@ class SaleResource extends Resource
                 TextColumn::make('customer_name')->label('Customer Name'),
                 TextColumn::make('transaction_type')
                     ->label('Transaction Type')
-                    ->formatStateUsing(fn ($state) => $state ? (['sale' => 'Sales', 'sale_return' => 'Sale Return'][$state] ?? 'N/A') : 'N/A'),
+                    ->formatStateUsing(fn ($state) => $state ? (['Sales' => 'Sales', 'Sales Return' => 'Sales Return'][$state] ?? 'N/A') : 'N/A'),
                 
                 TextColumn::make('mode_of_transaction')
                     ->label('Mode of Transaction')
                     ->formatStateUsing(fn ($state) => match ($state) {
-                        'cash' => 'Cash',
-                        'credit' => 'Credit',
-                        'bank' => 'Bank Transfer',
+                        'CA' => 'Cash',
+                        'CR' => 'Credit',
+                        'BA' => 'Bank Transfer',
                         default => 'N/A',
                     }),
                
@@ -61,6 +61,13 @@ class SaleResource extends Resource
                 TextColumn::make('grand_amount')->label('Grand Amount')->money('INR', true),
                 
             ])
+            // ->rowClasses(function ($record) {
+            //     return match ($record->transaction_type) {
+            //         'Sales'   => 'bg-gray-100 text-yellow-800',
+            //         'Sales Return'  => 'bg-green-100 text-green-800',
+            //         default     => '',
+            //     };
+            // })
             ->filters([
                 //
             ])

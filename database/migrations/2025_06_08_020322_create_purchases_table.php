@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id')->nullable();
+            $table->foreignId('company_id')->constrained('users');
             $table->unsignedBigInteger('branch_id')->nullable();
             $table->integer('entry_no');
             $table->string('purchase_purchase_return_no');
             $table->integer('supplier_id')->nullable();
             $table->string('supplier_name');
-            $table->enum('transaction_type',['purchase','purchase_return'])->default('purchase');// sale or sale return
-            $table->enum('mode_of_transaction', ['cash','credit','bank'])->default('cash');// cash, credit, bank transfer, etc.
+            $table->string('transaction_type')->default('Purchase');// Purchase or Purchase Return
+            $table->string('mode_of_transaction')->default('CA');// CA, CR, BA
             $table->decimal('gross_amount', 10, 2)->default(0.00);
             $table->decimal('discount', 10, 2)->default(0.00);  
             $table->decimal('net_amount', 10, 2)->default(0.00);

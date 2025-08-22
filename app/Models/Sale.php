@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
+
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Sale extends Model
 {
@@ -23,6 +26,7 @@ class Sale extends Model
         'net_amount',
         'vat_amount',
         'grand_amount',
+        'tr_date'
     ];
 
     protected $casts = [
@@ -36,4 +40,13 @@ class Sale extends Model
         'created_at',
         'updated_at',
     ];
+
+    #[Scope]
+    public function filterUserId($query)
+    {
+        if(Auth::user()->user_type!='super_admin')
+        {
+            return $query->where('company_id', Auth::id());
+        }
+    }
 }
