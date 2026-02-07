@@ -8,14 +8,22 @@ use Illuminate\Support\Str;
 class Company extends Model
 {
     
-    protected static function boot()
-    {
-        parent::boot();
+    protected $fillable = [
+        'name',
+        'email',
+        'unique_register_id',
+        'address',
+        'phone',
+        'place',
+        'contact_person',
+        'activation_count',
+        'allowed_activations',
+        'active_devices',
+        'status',
+    ];
 
-        static::creating(function ($company) {
-            if (empty($company->company_registration_id)) {
-                $company->company_registration_id = (string) Str::uuid();
-            }
-        });
+    public function clientPCs()
+    {
+        return $this->hasMany(NumberOfClientPC::class, 'company_id','id');
     }
 }

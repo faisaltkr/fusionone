@@ -37,11 +37,6 @@ class UserResource extends Resource
                  TextInput::make('email')->required()->maxLength(60)->email(),
                  TextInput::make('password')->password()->required()->minLength(8)->maxLength(60)->confirmed()->dehydrateStateUsing(fn($state) => Hash::make($state))->dehydrated(fn($state) => filled($state))->visibleOn('create'),
                  TextInput::make('password_confirmation')->label('Confirm Password')->password()->required()->visibleOn('create')->dehydrated(false), // <-- Add this line
-                 TextInput::make('company_name')->required()->maxLength(100),
-                 TextInput::make('address')->required()->maxLength(255),
-                 TextInput::make('place')->required()->maxLength(255),
-                 TextInput::make('phone')->required()->maxLength(12),
-                 TextInput::make('company_reg_id')->disabled(),
                  TextInput::make('status')->disabled(),
             ]);
     }
@@ -52,7 +47,7 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name'),
                 TextColumn::make('email'),
-                TextColumn::make('company_name'),
+                //TextColumn::make('company_name'),
                 // TextColumn::make('address'),
                 // TextColumn::make('phone'),
                 // TextColumn::make('place'),

@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('number_of_client_pc', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id')->nullable();
+            $table->foreignId('company_id')->constrained('companies')->cascadeOnDelete();
             $table->enum('type',['server','client'])->default('client');
             $table->enum('app_id',['fusionOne','R-Pos','Pos'])->default('fusionOne');
-            $table->string('hardware_id');
-            $table->decimal('latitude')->nullable();
-            $table->decimal('longitude')->nullable();
+            $table->string('hardware_id')->unique();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
             $table->string('pc_name')->nullable();
-            $table->enum('status',['activate','deactivate','surrender'])->nullable();
+            $table->enum('status',['active','inactive','surrender'])->default('active');
+            $table->timestamp('activated_at')->nullable();
             $table->timestamps();
         });
     }

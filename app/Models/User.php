@@ -20,8 +20,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name', 'email', 'company_reg_id', 'company_name', 'place', 'address',
-        'phone', 'status', 'password', 'user_type',
+        'name', 'email', 'status', 'password', 'user_type'
     ];
 
     /**
@@ -47,17 +46,6 @@ class User extends Authenticatable
         ];
     }
 
-    protected static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($company) {
-            if (empty($company->company_registration_id)) {
-                $company->company_reg_id = (string) Str::uuid();
-            }
-        });
-    }
-
     public function canAccessPanel(Panel $panel): bool
     {
         // This is where you define who can access the Filament panel.
@@ -66,10 +54,5 @@ class User extends Authenticatable
 
         // For now, let's allow all authenticated users to access the panel
         return true;
-    }
-
-    public function clientPCs()
-    {
-        return $this->hasMany(NumberOfClientPC::class, 'company_id','id');
     }
 }

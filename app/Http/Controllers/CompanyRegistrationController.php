@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Company;
 use App\Models\NumberOfClientPC;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -16,7 +17,6 @@ class CompanyRegistrationController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|email|unique:users,email',
-            'company_name' => 'required|string',
             'place'        => 'required|string',
             'address'      => 'required|string',
             'phone'        => 'required|string|max:15',
@@ -43,21 +43,26 @@ class CompanyRegistrationController extends Controller
         $uuid = Str::uuid();
 
         // Create the user (company)
-        $user = User::create([
+        $company = Company::create([
             'name'            => $request->name,
             'email'           => $request->email,
-            'company_reg_id'  => $uuid,
-            'company_name'    => $request->company_name,
+            'unique_register_id'  => $uuid,
             'place'           => $request->place,
             'address'         => $request->address,
             'phone'           => $request->phone,
             'password'        => Hash::make($request->password),
-            'user_type'       => 'admin',
+        ]);
+
+        $user = User::create([
+            'name'            => $request->name,
+            'email'           => $request->email,
+            'phone'           => $request->phone,
+            'password'        => Hash::make($request->password),
         ]);
 
         // Create the main PC record
         NumberOfClientPC::create([
-            'company_id'  => $user->id,
+            'company_id'  => $company->id,
             'hardware_id' => $request->hardware_id,
             'latitude'    => $request->latitude,
             'longitude'   => $request->longitude,

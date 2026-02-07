@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\User;
+use Carbon\Carbon;
 use Nette\Utils\Random;
 
 /**
@@ -40,7 +41,7 @@ class SaleFactory extends Factory
             'net_amount' => $net,
             'vat_amount' => $vat,
             'grand_amount' => $grand,
-            'tr_date' => $this->faker->date()
+            'tr_date' =>  $this->faker->dateTimeBetween('2025-08-01', '2025-08-15')
         ];
     }
 }

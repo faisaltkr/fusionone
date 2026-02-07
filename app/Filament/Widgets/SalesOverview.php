@@ -4,6 +4,7 @@ namespace App\Filament\Widgets;
 
 use App\Models\Purchase;
 use App\Models\Sale;
+use Filament\Forms\Components\DatePicker;
 use Filament\Widgets\Concerns\InteractsWithPageFilters;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
@@ -13,29 +14,41 @@ use Illuminate\Support\Facades\Auth;
 class SalesOverview extends BaseWidget
 {
     use InteractsWithPageFilters;
-    protected function getFilters(): ?array
-    {
-        return [
-            'today' => 'Today',
-            'week' => 'This Week',
-            'month' => 'This Month',
-        ];
-    }
+
+    
+    
     protected function getStats(): array
     {
-        $sales = (Auth::user()->user_type=='super_admin') ? Sale::sum('grand_amount') : Sale::where('company_id',Auth::id())->sum('grand_amount');
+        $filters = $this->filters;
+        $salesQuery = (Auth::user()->user_type == 'super_admin')
+            ? Sale::query()
+            : Sale::where('company_id', Auth::id());
 
-        $purchase = (Auth::user()->user_type=='super_admin') ? Purchase::sum('grand_amount') : Purchase::where('company_id',Auth::id())->sum('grand_amount');
+        $purchaseQuery = (Auth::user()->user_type == 'super_admin')
+            ? Purchase::query()
+            : Purchase::where('company_id', Auth::id());
 
-        $svat = (Auth::user()->user_type=='super_admin') ? Sale::sum('vat_amount') : Sale::where('company_id',Auth::id())->sum('vat_amount');
+        // Apply date filters if provided
+        if (!empty($filters['date_from'])) {
+            $salesQuery->whereDate('tr_date', '>=', $filters['date_from']);
+            $purchaseQuery->whereDate('tr_date', '>=', $filters['date_from']);
+        }
 
-        $pvat = (Auth::user()->user_type=='super_admin') ? Purchase::sum('vat_amount') : Purchase::where('company_id',Auth::id())->sum('vat_amount');
-        $vat = $svat-$pvat;
+        if (!empty($filters['date_until'])) {
+            $salesQuery->whereDate('tr_date', '<=', $filters['date_until']);
+            $purchaseQuery->whereDate('tr_date', '<=', $filters['date_until']);
+        }
+
+        $sales = $salesQuery->sum('grand_amount');
+        $purchase = $purchaseQuery->sum('grand_amount');
+        $svat = $salesQuery->sum('vat_amount');
+        $pvat = $purchaseQuery->sum('vat_amount');
+        $vat = $svat - $pvat;
 
         return [
-            Stat::make('Total Sales', "₹$sales"),
-            Stat::make('Total Purchase', "₹$purchase"),
-            Stat::make('Total VAT', "₹$vat"),
+            Stat::make('Total Sales', "₹" . number_format($sales, 2)),
+            Stat::make('Total Purchase', "₹" . number_format($purchase, 2)),
+            Stat::make('Total VAT', "₹" . number_format($vat, 2)),
         ];
     }
 }
