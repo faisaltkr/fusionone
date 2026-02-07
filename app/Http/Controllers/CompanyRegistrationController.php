@@ -17,10 +17,15 @@ class CompanyRegistrationController extends Controller
         $request->validate([
             'name'         => 'required|string|max:255',
             'email'        => 'required|email|unique:users,email',
-            'place'        => 'required|string',
-            'address'      => 'required|string',
-            'phone'        => 'required|string|max:15',
+            'contact_person' => 'required|string|max:255',
+            'place'        => 'required|string|max:255',
+            'address'      => 'required|string|max:65535',
+            'phone'        => 'nullable|string|max:12',
             'password'     => 'required|string|min:6|confirmed',
+            'activation_count' => 'nullable|integer|min:0',
+            'allowed_devices'  => 'nullable|integer|min:1',
+            'active_devices'   => 'nullable|integer|min:0',
+            'status'       => 'nullable|boolean',
 
             // Client PC fields
             'hardware_id'  => [
@@ -47,10 +52,15 @@ class CompanyRegistrationController extends Controller
             'name'            => $request->name,
             'email'           => $request->email,
             'unique_register_id'  => $uuid,
+            'contact_person'  => $request->contact_person,
             'place'           => $request->place,
             'address'         => $request->address,
             'phone'           => $request->phone,
             'password'        => Hash::make($request->password),
+            'activation_count' => $request->activation_count ?? 1,
+            'allowed_devices' => $request->allowed_devices ?? 1,
+            'active_devices'  => $request->active_devices ?? 0,
+            'status'          => $request->status ?? true,
         ]);
 
         $user = User::create([
