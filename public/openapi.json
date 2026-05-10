@@ -1,0 +1,893 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "FusionOneAdmin API",
+    "description": "Swagger documentation for FusionOneAdmin API endpoints.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "/api",
+      "description": "API server"
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "summary": "Get authenticated user",
+        "description": "Returns the currently authenticated user. Requires Sanctum authentication.",
+        "responses": {
+          "200": {
+            "description": "Authenticated user data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sanctumAuth": []
+          }
+        ]
+      }
+    },
+    "/sales": {
+      "get": {
+        "summary": "Get all sales",
+        "responses": {
+          "200": {
+            "description": "Sales list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SaleResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a sale",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Sale created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sales/{id}": {
+      "get": {
+        "summary": "Get a sale by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Sale record ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sale retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Sale not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a sale",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Sale record ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaleCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sale updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaleResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a sale",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Sale record ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sale deleted successfully"
+          },
+          "404": {
+            "description": "Sale not found"
+          }
+        }
+      }
+    },
+    "/purchases": {
+      "get": {
+        "summary": "Get all purchases",
+        "responses": {
+          "200": {
+            "description": "Purchases list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/PurchaseResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a purchase",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Purchase created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/purchases/{id}": {
+      "get": {
+        "summary": "Get a purchase by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Purchase record ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Purchase retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Purchase not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a purchase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Purchase record ID"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurchaseCreate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Purchase updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PurchaseResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a purchase",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Purchase record ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Purchase deleted successfully"
+          },
+          "404": {
+            "description": "Purchase not found"
+          }
+        }
+      }
+    },
+    "/companies": {
+      "get": {
+        "summary": "Get all registered companies",
+        "responses": {
+          "200": {
+            "description": "Companies list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/CompanyRegistrationResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/companies/{id}": {
+      "get": {
+        "summary": "Get a company by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Company ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyRegistrationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Company not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a company",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Company ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Company deleted successfully"
+          },
+          "404": {
+            "description": "Company not found"
+          }
+        }
+      }
+    },
+    "/register-company": {
+      "post": {
+        "summary": "Register a new company",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompanyRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Company registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyRegistrationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoice-logs": {
+      "get": {
+        "summary": "Get all invoice logs",
+        "responses": {
+          "200": {
+            "description": "Invoice logs retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/EInvoiceLogResponse"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create an invoice log",
+        "description": "Insert a ZATCA invoice transaction log. Requires clientId header.",
+        "parameters": [
+          {
+            "name": "clientId",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Client registration ID sent in request headers"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EInvoiceTransactionLog"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Invoice log inserted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EInvoiceLogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/invoice-logs/{id}": {
+      "get": {
+        "summary": "Get an invoice log by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Invoice log ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice log retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EInvoiceLogResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Invoice log not found"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete an invoice log",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Invoice log ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Invoice log deleted successfully"
+          },
+          "404": {
+            "description": "Invoice log not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "sanctumAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Sanctum bearer token authentication header or cookie-based session auth."
+      }
+    }
+    ,
+    "schemas": {
+      "SaleCreate": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "entry_no",
+          "sales_sale_return_no",
+          "customer_name",
+          "transaction_type",
+          "mode_of_transaction",
+          "gross_amount"
+        ],
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entry_no": {
+            "type": "integer"
+          },
+          "sales_sale_return_no": {
+            "type": "string"
+          },
+          "customer_name": {
+            "type": "string"
+          },
+          "transaction_type": {
+            "type": "string"
+          },
+          "mode_of_transaction": {
+            "type": "string"
+          },
+          "gross_amount": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "net_amount": {
+            "type": "number"
+          },
+          "vat_amount": {
+            "type": "number"
+          },
+          "grand_amount": {
+            "type": "number"
+          }
+        }
+      },
+      "SaleResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "sale": {
+            "type": "object"
+          }
+        }
+      },
+      "PurchaseCreate": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "entry_no",
+          "purchase_purchase_return_no",
+          "supplier_name",
+          "transaction_type",
+          "mode_of_transaction",
+          "gross_amount",
+          "tr_date"
+        ],
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "entry_no": {
+            "type": "integer"
+          },
+          "purchase_purchase_return_no": {
+            "type": "string"
+          },
+          "supplier_name": {
+            "type": "string"
+          },
+          "transaction_type": {
+            "type": "string"
+          },
+          "mode_of_transaction": {
+            "type": "string"
+          },
+          "gross_amount": {
+            "type": "number"
+          },
+          "discount": {
+            "type": "number"
+          },
+          "net_amount": {
+            "type": "number"
+          },
+          "vat_amount": {
+            "type": "number"
+          },
+          "grand_amount": {
+            "type": "number"
+          },
+          "tr_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "PurchaseResponse": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "purchase": {
+            "type": "object"
+          }
+        }
+      },
+      "CompanyRegistration": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "contact_person",
+          "place",
+          "address",
+          "password",
+          "password_confirmation",
+          "hardware_id",
+          "type",
+          "app_id"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "contact_person": {
+            "type": "string"
+          },
+          "place": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "password_confirmation": {
+            "type": "string"
+          },
+          "activation_count": {
+            "type": "integer"
+          },
+          "allowed_devices": {
+            "type": "integer"
+          },
+          "active_devices": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "boolean"
+          },
+          "hardware_id": {
+            "type": "string"
+          },
+          "latitude": {
+            "type": "number"
+          },
+          "longitude": {
+            "type": "number"
+          },
+          "pc_name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["server", "client"]
+          },
+          "app_id": {
+            "type": "string",
+            "enum": ["fusionOne", "R-Pos", "Pos"]
+          }
+        }
+      },
+      "CompanyRegistrationResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "user": {
+            "type": "object"
+          }
+        }
+      },
+      "EInvoiceTransactionLog": {
+        "type": "object",
+        "required": [
+          "invoice_type",
+          "invoice_id",
+          "invoice_transaction_type",
+          "invoice_date"
+        ],
+        "properties": {
+          "invoice_type": {
+            "type": "string"
+          },
+          "invoice_id": {
+            "type": "integer"
+          },
+          "invoice_transaction_type": {
+            "type": "string"
+          },
+          "invoice_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "qr_code": {
+            "type": "string"
+          },
+          "zatca_status": {
+            "type": "string"
+          },
+          "invoice_base64": {
+            "type": "string"
+          },
+          "invoice_file_name": {
+            "type": "string"
+          },
+          "invoice_counter_value": {
+            "type": "integer"
+          },
+          "invoice_reported": {
+            "type": "string"
+          },
+          "invoice_cleared": {
+            "type": "string"
+          },
+          "invoice_hash": {
+            "type": "string"
+          },
+          "buyer_name": {
+            "type": "string"
+          },
+          "buyer_vat_no": {
+            "type": "string"
+          },
+          "seller_name": {
+            "type": "string"
+          },
+          "buyer_address": {
+            "type": "string"
+          },
+          "seller_address": {
+            "type": "string"
+          },
+          "seller_vat_no": {
+            "type": "string"
+          },
+          "previous_invoice_hash": {
+            "type": "string"
+          },
+          "validation_results": {
+            "type": "string"
+          },
+          "error_results": {
+            "type": "string"
+          },
+          "zatca_response_code": {
+            "type": "string"
+          },
+          "einvoice_sync_time": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "einvoice_uu_id": {
+            "type": "string"
+          },
+          "einvoice_no": {
+            "type": "string"
+          },
+          "resend": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EInvoiceLogResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

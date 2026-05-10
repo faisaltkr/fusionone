@@ -6,12 +6,53 @@ use App\Models\Company;
 use App\Models\NumberOfClientPC;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 
 class CompanyRegistrationController extends Controller
 {
+    /**
+     * Get all registered companies.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $companies = Company::with('user')->paginate(20);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Companies retrieved successfully.',
+            'data' => $companies,
+        ]);
+    }
+
+    /**
+     * Get a specific company by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $company = Company::with('user')->find($id);
+
+        if (!$company) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Company not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Company retrieved successfully.',
+            'data' => $company,
+        ]);
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -86,5 +127,34 @@ class CompanyRegistrationController extends Controller
             'message' => 'Company registered successfully',
             'user'    => $user,
         ], 201);
+    }
+
+    /**
+     * Delete a company.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $company = Company::find($id);
+
+        if (!$company) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Company not found.',
+            ], 404);
+        }
+
+        // Delete associated user and devices
+        User::where('id', $company->id)->delete();
+        NumberOfClientPC::where('company_id', $company->id)->delete();
+
+        $company->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Company deleted successfully.',
+        ]);
     }
 }

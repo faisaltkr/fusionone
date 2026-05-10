@@ -3,12 +3,53 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 use App\Models\EInvoiceTransactionLog;
 use App\Models\User;
 use Exception;
 
 class EInvoiceTransactionLogController extends Controller
 {
+    /**
+     * Get all invoice logs.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $logs = EInvoiceTransactionLog::paginate(20);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Invoice logs retrieved successfully.',
+            'data' => $logs,
+        ]);
+    }
+
+    /**
+     * Get a specific invoice log by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $log = EInvoiceTransactionLog::find($id);
+
+        if (!$log) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invoice log not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Invoice log retrieved successfully.',
+            'data' => $log,
+        ]);
+    }
+
     public function store(Request $request)
     {
 
@@ -52,6 +93,30 @@ class EInvoiceTransactionLogController extends Controller
         ]);
     }
 
+    /**
+     * Delete an invoice log record.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $log = EInvoiceTransactionLog::find($id);
+
+        if (!$log) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invoice log not found.',
+            ], 404);
+        }
+
+        $log->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Invoice log deleted successfully.',
+        ]);
+    }
 
     private function resolveClient(): User
     {

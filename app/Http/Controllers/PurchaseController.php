@@ -17,6 +17,46 @@ class PurchaseController extends Controller
     public function __construct(protected PurchaseService $purchaseService){}
 
     /**
+     * Get all purchases records.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $purchases = Purchase::paginate(20);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Purchases retrieved successfully.',
+            'data' => $purchases,
+        ]);
+    }
+
+    /**
+     * Get a specific purchase by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $purchase = Purchase::find($id);
+
+        if (!$purchase) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Purchase not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Purchase retrieved successfully.',
+            'data' => $purchase,
+        ]);
+    }
+
+    /**
      * Store a newly created sale in storage.
      *
      * @param SalesRequest $request
@@ -57,6 +97,31 @@ class PurchaseController extends Controller
             'status' => 'success',
             'message' => 'Purchase updated successfully.',
             'purchase' => $purchase,
+        ]);
+    }
+
+    /**
+     * Delete a purchase record.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $purchase = Purchase::find($id);
+
+        if (!$purchase) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Purchase not found.',
+            ], 404);
+        }
+
+        $purchase->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Purchase deleted successfully.',
         ]);
     }
 }

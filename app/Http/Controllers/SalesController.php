@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SalesRequest;
 use Illuminate\Http\Request; // Not strictly needed here, but often useful
 use App\Services\SalesService;
+use App\Models\Sale;
 use Illuminate\Http\JsonResponse; // Better type hinting for JSON responses
 
 class SalesController extends Controller
@@ -16,6 +17,46 @@ class SalesController extends Controller
     public function __construct(SalesService $salesService)
     {
         $this->salesService = $salesService;
+    }
+
+    /**
+     * Get all sales records.
+     *
+     * @return JsonResponse
+     */
+    public function index(): JsonResponse
+    {
+        $sales = Sale::paginate(20);
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sales retrieved successfully.',
+            'data' => $sales,
+        ]);
+    }
+
+    /**
+     * Get a specific sale by ID.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $sale = Sale::find($id);
+
+        if (!$sale) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sale not found.',
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sale retrieved successfully.',
+            'data' => $sale,
+        ]);
     }
 
     /**
@@ -59,6 +100,31 @@ class SalesController extends Controller
             'status' => 'success',
             'message' => 'Sale updated successfully.',
             'sale' => $sale,
+        ]);
+    }
+
+    /**
+     * Delete a sale record.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function destroy(int $id): JsonResponse
+    {
+        $sale = Sale::find($id);
+
+        if (!$sale) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Sale not found.',
+            ], 404);
+        }
+
+        $sale->delete();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Sale deleted successfully.',
         ]);
     }
 }
