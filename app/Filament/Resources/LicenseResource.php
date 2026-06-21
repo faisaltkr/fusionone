@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\LicenseResource\Pages;
 use App\Models\License;
+use App\Models\NumberOfClientPC;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\DateTimePicker;
@@ -229,6 +230,11 @@ class LicenseResource extends Resource
         $record->license_key = $record->generateLicenseKey();
         $record->status = $record->isExpired() ? 'expired' : 'active';
         $record->save();
+
+        // Stamp the matching device as activated now that its key is issued.
+        NumberOfClientPC::where('hardware_id', $record->hardware_id)
+            ->where('app_id', $record->app_id)
+            ->update(['activated_at' => now()]);
     }
 
     /**
