@@ -156,6 +156,7 @@ class CompanyRegistrationController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
+            'company_id' => $company->id,
         ]);
 
         $clientPc = NumberOfClientPC::create([
@@ -197,10 +198,8 @@ class CompanyRegistrationController extends Controller
             ], 404);
         }
 
-        // Delete associated user and devices
-        User::where('id', $company->id)->delete();
-        NumberOfClientPC::where('company_id', $company->id)->delete();
-
+        // Related users, licenses, devices, sales and purchases are removed
+        // by the Company model's deleting hook (super admins are preserved).
         $company->delete();
 
         return response()->json([

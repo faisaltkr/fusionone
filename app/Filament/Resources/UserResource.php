@@ -59,7 +59,8 @@ class UserResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->hidden(fn (User $record): bool => $record->user_type === 'super_admin'),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

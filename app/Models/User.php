@@ -14,12 +14,24 @@ class User extends Authenticatable implements FilamentUser // ✅ IMPLEMENT
 {
     use HasFactory, Notifiable, HasApiTokens;
 
+    protected static function booted(): void
+    {
+        // A super admin can never be deleted, regardless of the path
+        // (Filament row/bulk delete, company cascade or API).
+        static::deleting(function (User $user) {
+            if ($user->user_type === 'super_admin') {
+                return false;
+            }
+        });
+    }
+
     protected $fillable = [
         'name',
         'email',
         'status',
         'password',
         'user_type',
+        'company_id',
     ];
 
     protected $hidden = [
