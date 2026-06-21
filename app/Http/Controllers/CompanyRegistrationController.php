@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
-use App\Models\License;
 use App\Models\NumberOfClientPC;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -97,8 +96,6 @@ class CompanyRegistrationController extends Controller
                 'status' => $request->pc_status ?? 'active',
             ]);
 
-            $license = $this->createLicenseRequest($company, $request);
-
             return response()->json([
                 'status' => 'success',
                 'message' => 'Client PC registered for existing company.',
@@ -106,7 +103,6 @@ class CompanyRegistrationController extends Controller
                     'company_id' => $company->id,
                     'unique_register_id' => $company->unique_register_id,
                     'client_pc_id' => $clientPc->id,
-                    'license' => $license,
                 ],
             ], 201);
         }
@@ -173,8 +169,6 @@ class CompanyRegistrationController extends Controller
             'status' => $request->pc_status ?? 'active',
         ]);
 
-        $license = $this->createLicenseRequest($company, $request);
-
         return response()->json([
             'status' => 'success',
             'message' => 'Company registered successfully.',
@@ -182,35 +176,8 @@ class CompanyRegistrationController extends Controller
                 'company' => $company,
                 'user' => $user,
                 'client_pc' => $clientPc,
-                'license' => $license,
             ],
         ], 201);
-    }
-
-    /**
-     * Create a pending license request for a device during registration.
-     * The license key is generated later by an administrator from the panel.
-     */
-    private function createLicenseRequest(Company $company, Request $request): License
-    {
-        $licenseType = $request->license_type ?? 'demo';
-
-        return License::updateOrCreate(
-            [
-                'app_id' => $request->app_id,
-                'hardware_id' => $request->hardware_id,
-            ],
-            [
-                'company_id' => $company->id,
-                'unique_register_id' => $company->unique_register_id,
-                'license_type' => $licenseType,
-                'expiry' => License::calculateExpiry($licenseType),
-                'license_key' => null,
-                'support_expiry_date' => null,
-                'status' => 'pending',
-                'activated_at' => now(),
-            ]
-        );
     }
 
     /**
