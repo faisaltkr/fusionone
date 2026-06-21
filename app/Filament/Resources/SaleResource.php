@@ -20,6 +20,9 @@ class SaleResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
+    // Temporarily hidden from the navigation menu. Set back to true to restore.
+    protected static bool $shouldRegisterNavigation = false;
+
    public static function canCreate(): bool
    {
       return false;

@@ -20,6 +20,9 @@ class PurchaseResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-sparkles';
 
+    // Temporarily hidden from the navigation menu. Set back to true to restore.
+    protected static bool $shouldRegisterNavigation = false;
+
    public static function canCreate(): bool
    {
       return false;
