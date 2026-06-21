@@ -11,9 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('number_of_client_pc', function (Blueprint $table) {
-            $table->dropUnique(['hardware_id']);
-            $table->unique(['hardware_id', 'app_id']);
+        $indexes = collect(Schema::getIndexes('number_of_client_pc'));
+
+        Schema::table('number_of_client_pc', function (Blueprint $table) use ($indexes) {
+            // Drop the single-column unique on hardware_id only if it exists.
+            $singleColumnUnique = $indexes->first(fn ($index) => $index['unique']
+                && $index['columns'] === ['hardware_id']);
+
+            if ($singleColumnUnique) {
+                $table->dropUnique($singleColumnUnique['name']);
+            }
+
+            // Add the composite unique only if it isn't already present.
+            $compositeExists = $indexes->contains(fn ($index) => $index['unique']
+                && $index['columns'] === ['hardware_id', 'app_id']);
+
+            if (! $compositeExists) {
+                $table->unique(['hardware_id', 'app_id']);
+            }
         });
     }
 
@@ -22,9 +37,22 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('number_of_client_pc', function (Blueprint $table) {
-            $table->dropUnique(['hardware_id', 'app_id']);
-            $table->unique('hardware_id');
+        $indexes = collect(Schema::getIndexes('number_of_client_pc'));
+
+        Schema::table('number_of_client_pc', function (Blueprint $table) use ($indexes) {
+            $compositeUnique = $indexes->first(fn ($index) => $index['unique']
+                && $index['columns'] === ['hardware_id', 'app_id']);
+
+            if ($compositeUnique) {
+                $table->dropUnique($compositeUnique['name']);
+            }
+
+            $singleExists = $indexes->contains(fn ($index) => $index['unique']
+                && $index['columns'] === ['hardware_id']);
+
+            if (! $singleExists) {
+                $table->unique('hardware_id');
+            }
         });
     }
 };
