@@ -6,7 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Company extends Model
 {
-    
+    protected static function booted(): void
+    {
+        // Remove a company's client PCs whenever the company is deleted
+        // (covers Filament single/bulk delete and the API delete).
+        static::deleting(function (Company $company) {
+            $company->clientPCs()->delete();
+        });
+    }
+
     protected $fillable = [
         'name',
         'email',
