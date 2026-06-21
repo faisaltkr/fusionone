@@ -7,6 +7,7 @@ use App\Http\Controllers\SalesController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Middleware\CheckClientId;
 use App\Http\Controllers\EInvoiceTransactionLogController;
+use App\Http\Controllers\LicenseController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -29,6 +30,11 @@ Route::get('/companies', [CompanyRegistrationController::class, 'index'])->name(
 Route::get('/companies/{id}', [CompanyRegistrationController::class, 'show'])->name('companies.show');
 Route::post('/register-company', [CompanyRegistrationController::class, 'register'])->name('companies.register');
 Route::delete('/companies/{id}', [CompanyRegistrationController::class, 'destroy'])->name('companies.destroy');
+
+Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses.index');
+Route::get('/licenses/{id}', [LicenseController::class, 'show'])->name('licenses.show');
+Route::post('/license/activate', [LicenseController::class, 'activate'])->name('license.activate');
+Route::post('/license/verify', [LicenseController::class, 'verify'])->name('license.verify');
 
 Route::get('/invoice-logs', [EInvoiceTransactionLogController::class, 'index'])->name('invoice-logs.index');
 Route::get('/invoice-logs/{id}', [EInvoiceTransactionLogController::class, 'show'])->name('invoice-logs.show');

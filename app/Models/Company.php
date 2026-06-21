@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
 
 class Company extends Model
 {
@@ -17,7 +16,7 @@ class Company extends Model
         'place',
         'contact_person',
         'activation_count',
-        'allowed_activations',
+        'allowed_devices',
         'active_devices',
         'status',
     ];
@@ -25,5 +24,10 @@ class Company extends Model
     public function clientPCs()
     {
         return $this->hasMany(NumberOfClientPC::class, 'company_id','id');
+    }
+
+    public function licenses()
+    {
+        return $this->hasMany(License::class, 'company_id', 'id');
     }
 }

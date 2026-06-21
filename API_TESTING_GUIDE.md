@@ -242,6 +242,19 @@ POST /api/register-company
 }
 ```
 
+### 1a. Register an additional app installation for an existing company
+```
+POST /api/register-company
+{
+  "unique_register_id": "existing-company-uuid",
+  "hardware_id": "HW-001-ABC",
+  "type": "client",
+  "app_id": "R-Pos"
+}
+```
+
+> This allows the same `hardware_id` to be reused for different `app_id` values.
+
 ### 2. Create a Sale
 ```
 POST /api/sales

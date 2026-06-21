@@ -2,4 +2,168 @@
 
 @config 'tailwind.config.js';
 
+:root {
+  --fusion-gradient: linear-gradient(120deg, #e5108c 0%, #8b1db5 52%, #1e54d8 100%);
+  --fusion-gradient-hover: linear-gradient(120deg, #f01f9a 0%, #9a2bc6 52%, #2f66ea 100%);
+  --fusion-shadow: 0 10px 24px rgba(139, 29, 181, 0.28);
+}
+
+/* Brand gradient on primary buttons (Create / Save / Sign in, etc.) */
+@layer components {
+  .fi-btn.fi-color-primary,
+  .fi-dropdown-list-item.fi-color-primary,
+  .fi-ac-btn-action.fi-color-primary {
+    background-image: var(--fusion-gradient) !important;
+    background-color: transparent !important;
+    border-color: transparent !important;
+    color: #ffffff !important;
+    box-shadow: var(--fusion-shadow);
+    transition: filter 0.2s ease, transform 0.2s ease, background-image 0.2s ease;
+  }
+
+  .fi-btn.fi-color-primary svg,
+  .fi-ac-btn-action.fi-color-primary svg {
+    color: #ffffff !important;
+  }
+
+  .fi-btn.fi-color-primary:hover,
+  .fi-ac-btn-action.fi-color-primary:hover {
+    background-image: var(--fusion-gradient-hover) !important;
+    transform: translateY(-1px);
+  }
+
+  .fi-btn.fi-color-primary:focus {
+    outline: 2px solid rgba(139, 29, 181, 0.45);
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .dashboard-page-bg {
+    background-image: radial-gradient(circle at top right, rgba(56, 189, 248, 0.18), transparent 30%), radial-gradient(circle at 25% 10%, rgba(59, 130, 246, 0.16), transparent 24%), linear-gradient(180deg, #020617 0%, #0f172a 100%);
+  }
+
+  .dashboard-glass-card {
+    background-color: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 80px rgba(15, 23, 42, 0.35);
+    backdrop-filter: blur(24px);
+  }
+
+  .dashboard-icon-box {
+    background: var(--fusion-gradient);
+    align-items: center;
+    border-radius: 1rem;
+    display: inline-flex;
+    height: 3rem;
+    justify-content: center;
+    width: 3rem;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 35px rgba(56, 189, 248, 0.18);
+  }
+
+  .dashboard-summary-panel {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.76));
+  }
+
+  .dashboard-card {
+    border-radius: 1.75rem;
+  }
+
+  .dashboard-table th {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .dashboard-table td {
+    border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.8s ease both;
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fi-main-sidebar {
+    background: transparent;
+    border-right: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .fi-main-sidebar .fi-sidebar-header {
+    background: transparent;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .fi-main-sidebar .fi-sidebar-header .fi-sidebar-logo,
+  .fi-main-sidebar .fi-sidebar-header .fi-sidebar-trigger {
+    color: #ffffff;
+  }
+
+  .fi-main-sidebar .fi-sidebar-nav {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+
+  .fi-main-sidebar .fi-sidebar-item-button {
+    background: transparent;
+    border-radius: 1rem;
+    color: #111827;
+    transition: transform 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .fi-main-sidebar .fi-sidebar-item-button:hover,
+  .fi-main-sidebar .fi-sidebar-item-button:focus {
+    background: rgba(139, 29, 181, 0.08);
+    color: #111827;
+    transform: translateX(2px);
+  }
+
+  .fi-main-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-button {
+    background-image: var(--fusion-gradient);
+    color: #ffffff;
+    box-shadow: 0 14px 30px rgba(139, 29, 181, 0.28);
+  }
+
+  .fi-main-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-icon,
+  .fi-main-sidebar .fi-sidebar-item.fi-active .fi-sidebar-item-label {
+    color: #ffffff;
+  }
+
+  .fi-main-sidebar .fi-sidebar-item-icon {
+    color: #1f2937;
+  }
+
+  .fi-main-sidebar .fi-sidebar-item-label {
+    color: #111827;
+  }
+
+  .fi-main-sidebar .fi-sidebar-group-label,
+  .fi-main-sidebar .fi-sidebar-group-button {
+    color: #4b5563;
+  }
+
+  .fi-main-sidebar .fi-sidebar-group.fi-active .fi-sidebar-group-button {
+    color: #ffffff;
+  }
+
+  .fi-main-sidebar .fi-sidebar-item-grouped-border {
+    background: rgba(56, 189, 248, 0.14);
+    border-radius: 0.75rem;
+  }
+
+  .fi-main-sidebar .fi-sidebar-close-overlay {
+    background: rgba(15, 23, 42, 0.82);
+  }
+}
+
 

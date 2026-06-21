@@ -111,34 +111,41 @@ class CompanyResource extends Resource
             ->columns([
                 TextColumn::make('name')
                     ->searchable()
-                    ->sortable(),
+                    ->sortable()
+                    ->wrap(),
                 
                 TextColumn::make('email')
                     ->searchable()
                     ->sortable()
-                    ->copyable(),
+                    ->copyable()
+                    ->wrap(),
                 
                 TextColumn::make('phone')
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->wrap(),
                 
                 TextColumn::make('contact_person')
                     ->searchable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->wrap(),
                 
                 TextColumn::make('place')
                     ->searchable()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->wrap(),
                 
                 TextColumn::make('activation_count')
                     ->numeric()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->hiddenFrom('md'),
                 
                 TextColumn::make('allowed_devices')
                     ->numeric()
-                    ->sortable(),
+                    ->sortable()
+                    ->hiddenFrom('md'),
                 
                 TextColumn::make('active_devices')
                     ->numeric()
@@ -149,22 +156,26 @@ class CompanyResource extends Resource
                         $state < 5 => 'success',
                         $state < 10 => 'warning',
                         default => 'danger',
-                    }),
+                    })
+                    ->hiddenFrom('md'),
                 
                 IconColumn::make('status')
                     ->boolean()
                     ->sortable()
-                    ->toggleable(),
+                    ->toggleable()
+                    ->hiddenFrom('md'),
                 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->hiddenFrom('lg'),
                 
                 TextColumn::make('updated_at')
                     ->dateTime()
                     ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->toggleable(isToggledHiddenByDefault: true)
+                    ->hiddenFrom('lg'),
             ])
             ->filters([
                 Tables\Filters\TernaryFilter::make('status')

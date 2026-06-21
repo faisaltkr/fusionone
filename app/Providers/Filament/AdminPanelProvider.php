@@ -31,6 +31,11 @@ class AdminPanelProvider extends PanelProvider
             ->sidebarWidth('225px')
             ->sidebarCollapsibleOnDesktop(true)
             ->maxContentWidth('full')
+            ->brandName('Fusion One')
+            ->brandLogo(asset('images/fusion-one-logo.svg'))
+            ->darkModeBrandLogo(asset('images/fusion-one-logo-dark.svg'))
+            ->brandLogoHeight('2.75rem')
+            ->favicon(asset('images/fusion-one-logo.svg'))
             ->login()
             ->colors([
                 'danger' => Color::Red,

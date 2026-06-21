@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 200" fill="none" role="img" aria-label="Fusion one">
+  <defs>
+    <linearGradient id="fusionGradDark" x1="36" y1="174" x2="164" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#E5108C"/>
+      <stop offset="0.52" stop-color="#8B1DB5"/>
+      <stop offset="1" stop-color="#1E54D8"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Brand mark: rounded hexagon -->
+  <polygon points="100,26 164,63 164,137 100,174 36,137 36,63"
+           fill="url(#fusionGradDark)" stroke="url(#fusionGradDark)" stroke-width="18" stroke-linejoin="round"/>
+  <text x="101" y="138" text-anchor="middle" font-family="'Arial Black', Arial, sans-serif"
+        font-style="italic" font-weight="900" font-size="104" fill="#ffffff">F</text>
+
+  <!-- Wordmark -->
+  <g fill="#FFFFFF" font-family="'Arial Black', Arial, sans-serif" font-style="italic" font-weight="900">
+    <text x="206" y="92" font-size="66" letter-spacing="-1">Fusion</text>
+    <text x="206" y="166" font-size="66" letter-spacing="1">one</text>
+  </g>
+</svg>
