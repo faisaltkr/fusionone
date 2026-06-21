@@ -556,6 +556,129 @@
           }
         }
       }
+    },
+    "/licenses": {
+      "get": {
+        "summary": "Get all licenses",
+        "responses": {
+          "200": {
+            "description": "Licenses list retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/License"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/licenses/{id}": {
+      "get": {
+        "summary": "Get a license by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "License ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "License retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/License"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "License not found"
+          }
+        }
+      }
+    },
+    "/license/activate": {
+      "post": {
+        "summary": "Activate (request) a license from the desktop app",
+        "description": "Creates a pending license request for a device. The license key is generated later by an administrator in the admin panel.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LicenseActivate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Activation request received; awaiting key generation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/License"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Device already has an active license"
+          },
+          "422": {
+            "description": "Validation error"
+          }
+        }
+      }
+    },
+    "/license/verify": {
+      "post": {
+        "summary": "Verify a license key",
+        "description": "Validates a license key for a device/app and returns validity plus expiry details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LicenseVerify"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "License is valid"
+          },
+          "403": {
+            "description": "License has expired or been revoked"
+          },
+          "404": {
+            "description": "Invalid license key"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -769,6 +892,12 @@
           "app_id": {
             "type": "string",
             "enum": ["fusionOne", "R-Pos", "Pos"]
+          },
+          "license_type": {
+            "type": "string",
+            "enum": ["demo", "full"],
+            "default": "demo",
+            "description": "Optional. Creates a pending license request for the device on registration."
           }
         }
       },
@@ -885,6 +1014,103 @@
           },
           "data": {
             "type": "object"
+          }
+        }
+      },
+      "License": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "company_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "license_type": {
+            "type": "string",
+            "enum": ["demo", "full"]
+          },
+          "unique_register_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "app_id": {
+            "type": "string",
+            "enum": ["fusionOne", "R-Pos", "Pos"]
+          },
+          "hardware_id": {
+            "type": "string"
+          },
+          "expiry": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "license_key": {
+            "type": "string",
+            "nullable": true
+          },
+          "support_expiry_date": {
+            "type": "string",
+            "format": "date",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "active", "expired", "revoked"]
+          },
+          "activated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "LicenseActivate": {
+        "type": "object",
+        "required": [
+          "unique_register_id",
+          "app_id",
+          "hardware_id"
+        ],
+        "properties": {
+          "unique_register_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Company unique_register_id"
+          },
+          "app_id": {
+            "type": "string",
+            "enum": ["fusionOne", "R-Pos", "Pos"]
+          },
+          "hardware_id": {
+            "type": "string"
+          },
+          "license_type": {
+            "type": "string",
+            "enum": ["demo", "full"],
+            "default": "demo"
+          }
+        }
+      },
+      "LicenseVerify": {
+        "type": "object",
+        "required": [
+          "app_id",
+          "hardware_id",
+          "license_key"
+        ],
+        "properties": {
+          "app_id": {
+            "type": "string",
+            "enum": ["fusionOne", "R-Pos", "Pos"]
+          },
+          "hardware_id": {
+            "type": "string"
+          },
+          "license_key": {
+            "type": "string"
           }
         }
       }
