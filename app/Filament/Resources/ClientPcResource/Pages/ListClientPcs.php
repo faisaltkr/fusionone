@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Filament\Resources\CompanyResource\Pages;
+namespace App\Filament\Resources\ClientPcResource\Pages;
 
-use App\Filament\Resources\CompanyResource;
+use App\Filament\Resources\ClientPcResource;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
@@ -12,9 +12,9 @@ use OpenSpout\Common\Entity\Style\Style;
 use OpenSpout\Writer\XLSX\Writer;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class ListCompanies extends ListRecords
+class ListClientPcs extends ListRecords
 {
-    protected static string $resource = CompanyResource::class;
+    protected static string $resource = ClientPcResource::class;
 
     /**
      * Columns exported to both PDF and Excel.
@@ -22,15 +22,14 @@ class ListCompanies extends ListRecords
      * @var array<string, string>
      */
     protected array $exportColumns = [
-        'name' => 'Name',
-        'email' => 'Email',
-        'phone' => 'Phone',
-        'contact_person' => 'Contact Person',
-        'place' => 'Place',
-        'allowed_devices' => 'Allowed Devices',
-        'active_devices' => 'Active Devices',
+        'company' => 'Customer',
+        'pc_name' => 'PC Name',
+        'type' => 'Type',
+        'app_id' => 'App',
+        'hardware_id' => 'Hardware ID',
         'status' => 'Status',
-        'created_at' => 'Registered On',
+        'activated_at' => 'Activated On',
+        'created_at' => 'Added On',
     ];
 
     protected function getHeaderActions(): array
@@ -47,8 +46,6 @@ class ListCompanies extends ListRecords
                 ->icon('heroicon-o-table-cells')
                 ->color('success')
                 ->action(fn () => $this->exportToExcel()),
-
-            Actions\CreateAction::make(),
         ];
     }
 
@@ -58,18 +55,18 @@ class ListCompanies extends ListRecords
     protected function getExportRecords()
     {
         return $this->getFilteredTableQuery()
+            ->with('company')
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
     protected function formatValue(string $key, $record): string
     {
-        $value = $record->{$key};
-
         return match ($key) {
-            'status' => $value ? 'Active' : 'Inactive',
-            'created_at' => $value ? Carbon::parse($value)->format('d M Y') : '',
-            default => (string) ($value ?? ''),
+            'company' => (string) ($record->company?->name ?? ''),
+            'type', 'status' => ucfirst((string) ($record->{$key} ?? '')),
+            'activated_at', 'created_at' => $record->{$key} ? Carbon::parse($record->{$key})->format('d M Y H:i') : '',
+            default => (string) ($record->{$key} ?? ''),
         };
     }
 
@@ -86,13 +83,13 @@ class ListCompanies extends ListRecords
             return $row;
         })->all();
 
-        $pdf = Pdf::loadView('exports.customers-pdf', [
+        $pdf = Pdf::loadView('exports.client-pcs-pdf', [
             'headings' => $headings,
             'rows' => $rows,
             'generatedAt' => now()->format('d M Y H:i'),
         ])->setPaper('a4', 'landscape');
 
-        $fileName = 'customers-' . now()->format('Y-m-d-His') . '.pdf';
+        $fileName = 'client-pcs-' . now()->format('Y-m-d-His') . '.pdf';
 
         return response()->streamDownload(
             fn () => print($pdf->output()),
@@ -103,7 +100,7 @@ class ListCompanies extends ListRecords
     protected function exportToExcel(): StreamedResponse
     {
         $records = $this->getExportRecords();
-        $fileName = 'customers-' . now()->format('Y-m-d-His') . '.xlsx';
+        $fileName = 'client-pcs-' . now()->format('Y-m-d-His') . '.xlsx';
 
         return response()->streamDownload(function () use ($records) {
             $writer = new Writer();

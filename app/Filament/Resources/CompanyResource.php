@@ -24,17 +24,17 @@ class CompanyResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-building-office-2';
 
-    protected static ?string $navigationLabel = 'Companies';
+    protected static ?string $navigationLabel = 'Customers';
 
-    protected static ?string $modelLabel = 'Company';
+    protected static ?string $modelLabel = 'Customer';
 
-    protected static ?string $pluralModelLabel = 'Companies';
+    protected static ?string $pluralModelLabel = 'Customers';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\Section::make('Company Information')
+                Forms\Components\Section::make('Customer Information')
                     ->schema([
                         TextInput::make('name')
                             ->required()
@@ -181,10 +181,52 @@ class CompanyResource extends Resource
                 Tables\Filters\TernaryFilter::make('status')
                     ->label('Status')
                     ->boolean()
-                    ->trueLabel('Active companies')
-                    ->falseLabel('Inactive companies')
+                    ->trueLabel('Active customers')
+                    ->falseLabel('Inactive customers')
                     ->native(false),
+
+                Tables\Filters\Filter::make('created_at')
+                    ->label('Registration Date')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_from')
+                            ->label('Registered from')
+                            ->native(false)
+                            ->closeOnDateSelection(),
+                        Forms\Components\DatePicker::make('created_until')
+                            ->label('Registered until')
+                            ->native(false)
+                            ->closeOnDateSelection(),
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_from'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '>=', $date),
+                            )
+                            ->when(
+                                $data['created_until'],
+                                fn (Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): array {
+                        $indicators = [];
+                        if ($data['created_from'] ?? null) {
+                            $indicators[] = Tables\Filters\Indicator::make('Registered from ' . \Illuminate\Support\Carbon::parse($data['created_from'])->toFormattedDateString())
+                                ->removeField('created_from');
+                        }
+                        if ($data['created_until'] ?? null) {
+                            $indicators[] = Tables\Filters\Indicator::make('Registered until ' . \Illuminate\Support\Carbon::parse($data['created_until'])->toFormattedDateString())
+                                ->removeField('created_until');
+                        }
+                        return $indicators;
+                    }),
             ])
+            ->filtersFormColumns(2)
+            ->filtersTriggerAction(
+                fn (Tables\Actions\Action $action) => $action
+                    ->label('Filters')
+                    ->icon('heroicon-m-funnel'),
+            )
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),

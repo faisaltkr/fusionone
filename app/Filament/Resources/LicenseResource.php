@@ -56,7 +56,7 @@ class LicenseResource extends Resource
                             ->relationship('company', 'name')
                             ->searchable()
                             ->preload()
-                            ->label('Company'),
+                            ->label('Customer'),
 
                         Select::make('license_type')
                             ->options(['demo' => 'Demo', 'full' => 'Full'])
@@ -108,7 +108,7 @@ class LicenseResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('company.name')
-                    ->label('Company')
+                    ->label('Customer')
                     ->searchable()
                     ->sortable()
                     ->wrap(),
@@ -267,7 +267,7 @@ class LicenseResource extends Resource
             ->schema([
                 InfoSection::make('Client Details')
                     ->schema([
-                        TextEntry::make('company.name')->label('Company'),
+                        TextEntry::make('company.name')->label('Customer'),
                         TextEntry::make('company.email')->label('Email'),
                         TextEntry::make('company.contact_person')->label('Contact Person'),
                         TextEntry::make('company.phone')->label('Phone'),

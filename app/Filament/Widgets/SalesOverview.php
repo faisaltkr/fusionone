@@ -33,7 +33,7 @@ class SalesOverview extends BaseWidget
             ->count();
 
         return [
-            Stat::make('Total Companies Registered', $companies)
+            Stat::make('Total Customers Registered', $companies)
                 ->icon('heroicon-o-building-office-2')
                 ->color('primary'),
             Stat::make('Total Active Devices', $activeDevices)
